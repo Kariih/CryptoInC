@@ -60,9 +60,8 @@ void encryptText(int *key, char *message){
 
     char numberFromFile = '0';
     int count = 1;
-
-    char *encryptedMessage[size];
     messageToBeEncrypted = malloc(size*sizeof(int));
+
     while (fscanf(f, "%c", &numberFromFile) == 1)
     {
         messageToBeEncrypted[count] = numberFromFile;
@@ -70,36 +69,43 @@ void encryptText(int *key, char *message){
     }
     fclose(f);
 
+    const int MAX_BUFF = 99999;
+    char* encryptedMessage = malloc(MAX_BUFF);
+    int length = 0, difference;
+
     for(int i = 0; i <= size; i++)
     {
         int countWhileLoop = 1;
-        int firstChar = messageToBeEncrypted[i];
-        if((firstChar>='a'&&firstChar<='z'))
+        int currentCharToEncrypt = messageToBeEncrypted[i];
+        printf("%c", messageToBeEncrypted[i]);
+        difference = 0;
+        if(currentCharToEncrypt>='a'&&currentCharToEncrypt<='z')
         {
-            while(firstChar != key[countWhileLoop])
+            while((currentCharToEncrypt != key[countWhileLoop])&&(countWhileLoop+3<messageToBeEncrypted[i-1]||countWhileLoop-3>messageToBeEncrypted[i-1]))
             {
                 countWhileLoop++;
             }
-            encryptedMessage[i] += '['+ countWhileLoop +']';
+            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
+                                "%c%d%c", '[',countWhileLoop,']');
         }
-        else if(firstChar>='A'&&firstChar<='Z')
+        else if(currentCharToEncrypt>='A'&&currentCharToEncrypt<='Z')
         {
-            char lowerChar = tolower(firstChar);
-            while(lowerChar != key[countWhileLoop])
+            char lowerChar = tolower(currentCharToEncrypt);
+            while((currentCharToEncrypt != key[countWhileLoop])&&(countWhileLoop+3<messageToBeEncrypted[i-1]||countWhileLoop-3>messageToBeEncrypted[i-1]))
             {
                 countWhileLoop++;
             }
-            encryptedMessage[i] += '[' + '-'+ countWhileLoop +']';
+            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
+                                "%c%c%d%c", '[','-',countWhileLoop,']');
         }
         else
         {
-            encryptedMessage[i] += firstChar;
-        }
-        for(int i = 1; i <= size+1; i++)
-        {
-            printf("%s", encryptedMessage[i]);
+            char c = currentCharToEncrypt;
+            printf("%c", c);
+        //    length += snprintf(encryptedMessage + length, MAX_BUFF-length, "%c", currentCharToEncrypt);
         }
     }
+    printf("%s", encryptedMessage);
     //return encryptedMessage;
 }
 

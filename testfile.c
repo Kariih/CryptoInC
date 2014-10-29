@@ -1,17 +1,30 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 int main()
 {
-    char *a[255];
+    char *a;
+    char str[80];
 
     for(int i = 0; i<= 6; i++){
-        a[i] = sprintf(a[i], "%c%d%c", '[',i,']');
+        sprintf(str, "%c%d%c", '[',i,']');
+    //    fputs(str, stdout);
+
     }
 
-    for(int i = 0; i<= 6; i++){
-        printf("%s\n", a[i]);
-    }
+const int MAX_BUFF = 1000;
+char* Buffer = malloc(MAX_BUFF);
+int length = 0;
+int c = 56;
 
+length += snprintf(Buffer + length, MAX_BUFF-length,
+                    "%c%d%c", '[',345,']');
+length += snprintf(Buffer + length, MAX_BUFF-length,
+                    "%c%d%c", '[',539,']');
+length += snprintf(Buffer + length, MAX_BUFF-length,
+                    "%c", c);
+
+printf("%s", Buffer);
 }
