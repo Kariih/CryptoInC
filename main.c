@@ -1,66 +1,67 @@
 #include <stdio.h>
-#include <sys/stat.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 
-char *charToBeEncrypted;
-char *charForKey;
+char *messageToBeEncrypted;
+int *keyForEncryption;
 
-int openFile(){
-    char *filename = "songLibrary/anaconda.txt";
-    FILE *file = fopen(filename, "r");
+int openFile()
+{
+    char *filename = "songLibrary/sweetChildGR.txt";
+    FILE *f = fopen(filename, "r");
+
     struct stat st;
     stat(filename, &st);
     int size = st.st_size;
-    charForKey = malloc(size*sizeof(char));
+    char numberFromFile = '0';
     int count = 0;
-    int charFromFile = 0;
-    while (fscanf(file, "%d", &charFromFile) == 1)
+    int ch = getc(f);
+
+    keyForEncryption = malloc(size*sizeof(int));
+    while (fscanf(f, "%c", &numberFromFile) == 1)
     {
-        charForKey[count] = charFromFile;
+        keyForEncryption[count] = numberFromFile;
         count++;
     }
-    return count;
-}
-void print(char *charForKey, int count)
-{
-
+    fclose(f);
+    return size;
 
 }
-char* filterAndGetKey(char *charForKey, int count)
+
+char* filterAndGetKey(int size)
 {
-    char *filteredText;
-    for(int i = 0; charForKey[i]!='\0'; i++)
+    int *lowercase = malloc(size*sizeof(int));
+    int *removedAllButLetters = malloc(size*sizeof(int));
+    int countLetters = 0;
+    for(int i = 0; i <= size; i++)
     {
-        filteredText = tolower(&charForKey[i]);
+        int num = keyForEncryption[i];
+        lowercase[i] = tolower(num);
     }
-    for(int i=0; filteredText[i]!='\0'; ++i)
+    for(int i = 0; i<= size; i++)
     {
-        while (!(filteredText[i]>='a'&&filteredText[i]<='z') || filteredText[i]=='\0')
+        if((lowercase[i]>='a'&&lowercase[i]<='z'))
         {
-            for(int j=i;filteredText[j]!='\0';++j)
-            {
-                filteredText[j]=filteredText[j+1];
-            }
-            filteredText[i]='\0';
+            removedAllButLetters[countLetters] = lowercase[i];
+            printf("%c", removedAllButLetters[countLetters]);
+            countLetters++;
         }
     }
-    for(int i = 0; filteredText[i]!='\0'; i++)
-    {
-        printf("%c", filteredText[i]);
-    }
-    return filteredText;
+    return removedAllButLetters;
 }
+
 void encrypt(){
     printf("%s", "this will be encrypted");
 }
-int main(){
-    char Alphabet[26] = {"abcdefghijklmnopqrstuvwxyz"};
 
-    int count = 0;
-    count = openFile();
-//    print(charToBeEncrypted, count);
-    filterAndGetKey(charForKey, count);
-//    encrypt();
+int main()
+{
+    int size = openFile();
+    char *key = filterAndGetKey(size);
+    getMessage();
+    encrypt(key, message);
 
 }
