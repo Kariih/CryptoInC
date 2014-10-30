@@ -5,8 +5,8 @@
 #include <ctype.h>
 #include <unistd.h>
 
-int *messageToBeEncrypted;
 int *keyForEncryption;
+int *messageToBeEncrypted;
 
 int openFile()
 {
@@ -51,7 +51,43 @@ int* filterAndGetKey(int size)
     }
     return removedAllButLetters;
 }
+void findIndexAndAdd(int *messageToBeEncrypted, int size, int *key){
+    const int MAX_BUFF = 99999;
+    char *encryptedMessage = malloc(MAX_BUFF);
+    int length = 0;
+    for (int i = 1; i <= size; i++)
+    {
+        int currentCharToEncrypt = messageToBeEncrypted[i];
+        int n = 0;
+        if ((currentCharToEncrypt>='a'&&currentCharToEncrypt<='z'))
+        {
+            while(currentCharToEncrypt != key[n])
+            {
+                n++;
+            }
+            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
+                                "%c%d%c", '[',n,']');
+        }
+        else if(currentCharToEncrypt>='A'&&currentCharToEncrypt<='Z')
+        {
+            currentCharToEncrypt = tolower(currentCharToEncrypt);
+            while(currentCharToEncrypt != key[n])
+            {
+                n++;
+            }
+            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
+                                "%c%c%d%c", '[', '-',n,']');
 
+        }
+        else
+        {
+            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
+                               "%c", currentCharToEncrypt);
+        }
+    }
+    printf("%s", encryptedMessage);
+    //return encryptedMessage;
+}
 void encryptText(int *key, char *message){
     FILE *f = fopen(message, "r");
     struct stat st;
@@ -65,49 +101,14 @@ void encryptText(int *key, char *message){
     while (fscanf(f, "%c", &numberFromFile) == 1)
     {
         messageToBeEncrypted[count] = numberFromFile;
+        printf("%c",messageToBeEncrypted[count]);
         count++;
     }
     fclose(f);
 
-    const int MAX_BUFF = 99999;
-    char* encryptedMessage = malloc(MAX_BUFF);
-    int length = 0, difference;
-
-    for(int i = 0; i <= size; i++)
-    {
-        int countWhileLoop = 1;
-        int currentCharToEncrypt = messageToBeEncrypted[i];
-        printf("%c", messageToBeEncrypted[i]);
-        difference = 0;
-        if(currentCharToEncrypt>='a'&&currentCharToEncrypt<='z')
-        {
-            while((currentCharToEncrypt != key[countWhileLoop])&&(countWhileLoop+3<messageToBeEncrypted[i-1]||countWhileLoop-3>messageToBeEncrypted[i-1]))
-            {
-                countWhileLoop++;
-            }
-            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
-                                "%c%d%c", '[',countWhileLoop,']');
-        }
-        else if(currentCharToEncrypt>='A'&&currentCharToEncrypt<='Z')
-        {
-            char lowerChar = tolower(currentCharToEncrypt);
-            while((currentCharToEncrypt != key[countWhileLoop])&&(countWhileLoop+3<messageToBeEncrypted[i-1]||countWhileLoop-3>messageToBeEncrypted[i-1]))
-            {
-                countWhileLoop++;
-            }
-            length += snprintf(encryptedMessage + length, MAX_BUFF-length,
-                                "%c%c%d%c", '[','-',countWhileLoop,']');
-        }
-        else
-        {
-            char c = currentCharToEncrypt;
-            printf("%c", c);
-        //    length += snprintf(encryptedMessage + length, MAX_BUFF-length, "%c", currentCharToEncrypt);
-        }
-    }
-    printf("%s", encryptedMessage);
-    //return encryptedMessage;
+    findIndexAndAdd(messageToBeEncrypted, size, key);
 }
+
 
 int main()
 {
