@@ -1,64 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <string.h>
 #include <ctype.h>
-#include <unistd.h>
 #include "secretCoder.h"
-
 int size = 0;
 
-char *openFile(char *filename)
-{
-    FILE *f = fopen(filename, "r");
-
-    struct stat st;
-    stat(filename, &st);
-    size = st.st_size;
-    char numberFromFile = '0';
-    int count = 1;
-
-    int *dataFromFile = malloc(size*sizeof(int));
-    while (fscanf(f, "%c", &numberFromFile) == 1)
-    {
-        dataFromFile[count] = numberFromFile;
-        count++;
-    }
-    fclose(f);
-    char *returnPointer = malloc(size*sizeof(int));
-    for (int i = 0; i <= size; i++)
-    {
-        returnPointer[i] = dataFromFile[i];
-    }
-    return returnPointer;
-
-}
-
-char* filterAndGetKey(char *keyFile)
-{
-    int *lowercase = malloc(size*sizeof(int));
-    char *removedAllButLetters = malloc(size*sizeof(int));
-    int countLetters = 1;
-    for(int i = 1; i <= size; i++)
-    {
-        int num = keyFile[i];
-        lowercase[i] = tolower(num);
-    }
-    for(int i = 1; i<= size; i++)
-    {
-        if((lowercase[i]>='a'&&lowercase[i]<='z'))
-        {
-            removedAllButLetters[countLetters] = lowercase[i];
-            printf("%c", removedAllButLetters[countLetters]);
-            countLetters++;
-        }
-    }
-    return removedAllButLetters;
-}
 int findN(int currentCharToEncrypt, char *key, int n){
     while(currentCharToEncrypt != key[n])
     {
         n++;
+        if(key[n] == '\0')
+        {
+            printf("unable to encrypt with key");
+            exit(0);
+        }
     }
     return n;
 }
@@ -82,6 +36,7 @@ char* findIndexAndAdd(char *messageToBeEncrypted, int size, char *key){
             else
             {
                     n = findN(currentCharToEncrypt, key, n);
+                    int rounds = 0;
                     while(n<(lastUsed+d)&&n>(lastUsed-d))
                     {
                         n++;
@@ -103,10 +58,16 @@ char* findIndexAndAdd(char *messageToBeEncrypted, int size, char *key){
             else
             {
                     n = findN(currentCharToEncrypt, key, n);
+                    int timesForFindingNewIdex;
                     while(n<(lastUsed+3)&&n>(lastUsed-3))
                     {
                         n++;
                         n = findN(currentCharToEncrypt, key, n);
+                        timesForFindingNewIdex++;
+                        if(timesForFindingNewIdex == 2)
+                        {
+                            printf("unable to fullfill d condition");
+                        }
                     }
                     lastUsed = -n;
             }
