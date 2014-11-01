@@ -8,7 +8,7 @@
 
 int size = 10000;
 
-int *openFile(char *filname)
+int *openFile(char *filename)
 {
     FILE *f = fopen(filename, "r");
 
@@ -29,10 +29,10 @@ int *openFile(char *filname)
 
 }
 
-int* filterAndGetKey(int *keyFile)
+char* filterAndGetKey(int *keyFile)
 {
     int *lowercase = malloc(size*sizeof(int));
-    int *removedAllButLetters = malloc(size*sizeof(int));
+    char *removedAllButLetters = malloc(size*sizeof(int));
     int countLetters = 1;
     for(int i = 1; i <= size; i++)
     {
@@ -50,17 +50,18 @@ int* filterAndGetKey(int *keyFile)
     }
     return removedAllButLetters;
 }
-int findN(int currentCharToEncrypt, int *key, int n){
+int findN(int currentCharToEncrypt, char *key, int n){
     while(currentCharToEncrypt != key[n])
     {
         n++;
     }
     return n;
 }
-void findIndexAndAdd(int *messageToBeEncrypted, int size, int *key){
+char* findIndexAndAdd(int *messageToBeEncrypted, int size, char *key){
     const int MAX_BUFF = size*4;
     char *encryptedMessage = malloc(MAX_BUFF*sizeof(int));
     int length = 0;
+    int d = 3;
     int lastUsed = 0;
     for (int i = 1; i <= size; i++)
     {
@@ -76,7 +77,7 @@ void findIndexAndAdd(int *messageToBeEncrypted, int size, int *key){
             else
             {
                     n = findN(currentCharToEncrypt, key, n);
-                    while(n<(lastUsed+3)&&n>(lastUsed-3))
+                    while(n<(lastUsed+d)&&n>(lastUsed-d))
                     {
                         n++;
                         n = findN(currentCharToEncrypt, key, n);
@@ -115,8 +116,9 @@ void findIndexAndAdd(int *messageToBeEncrypted, int size, int *key){
         }
     }
     printf("%s", encryptedMessage);
+    return encryptedMessage;
 }
-void encryptText(int *key, char *message){
+char* encryptText(char *key, char *message){
     FILE *f = fopen(message, "r");
     struct stat st;
     stat(message, &st);
@@ -134,11 +136,13 @@ void encryptText(int *key, char *message){
     }
     fclose(f);
 
-    findIndexAndAdd(messageToBeEncrypted, size, key);
+    char *indexes = findIndexAndAdd(messageToBeEncrypted, size, key);
+    return indexes;
 }
 
-char* encode(const char *messageFile, const char *keyFrom){
-    int *keyFile = openFile(keyFrom);
-    int *key = filterAndGetKey(keyFile);
-    encryptText(key, messageFile);
+char* encode(char *messageFile, char *keyFromFile){
+    int *keyFile = openFile(keyFromFile);
+    char *key = filterAndGetKey(keyFile);
+    char *encrypted = encryptText(key, messageFile);
+    return encrypted;
 }
