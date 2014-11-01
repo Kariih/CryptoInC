@@ -36,6 +36,10 @@ void decodeMessage(char *key, char *message)
             countNumber = 0;
             memset(findNumbers, 0, 10);
         }
+        else if(message[i] == '-')
+        {
+            upper = 1;
+        }
         else if(message[i] != '[')
         {
             decryptedMessage[index] = message[i];
@@ -59,8 +63,8 @@ int main()
     char *encrypted = encode(messageFile, keyFile);
 
     //decode
-    char *keyFromFile2 = "songLibrary/badMJ.txt";
-    int *keyFile2 = openFile(keyFromFile2);
+    char *keyFromFile2 = "songLibrary/sweetChildGR.txt";
+    char *keyFile2 = openFile(keyFromFile2);
     char *key2 = filterAndGetKey(keyFile2);
     decodeMessage(key2, encrypted);
 

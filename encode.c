@@ -6,9 +6,9 @@
 #include <unistd.h>
 #include "secretCoder.h"
 
-int size = 10000;
+int size = 0;
 
-int *openFile(char *filename)
+char *openFile(char *filename)
 {
     FILE *f = fopen(filename, "r");
 
@@ -18,18 +18,23 @@ int *openFile(char *filename)
     char numberFromFile = '0';
     int count = 1;
 
-    int *keyForEncryption = malloc(size*sizeof(int));
+    int *dataFromFile = malloc(size*sizeof(int));
     while (fscanf(f, "%c", &numberFromFile) == 1)
     {
-        keyForEncryption[count] = numberFromFile;
+        dataFromFile[count] = numberFromFile;
         count++;
     }
     fclose(f);
-    return keyForEncryption;
+    char *returnPointer = malloc(size*sizeof(int));
+    for (int i = 0; i <= size; i++)
+    {
+        returnPointer[i] = dataFromFile[i];
+    }
+    return returnPointer;
 
 }
 
-char* filterAndGetKey(int *keyFile)
+char* filterAndGetKey(char *keyFile)
 {
     int *lowercase = malloc(size*sizeof(int));
     char *removedAllButLetters = malloc(size*sizeof(int));
@@ -57,7 +62,7 @@ int findN(int currentCharToEncrypt, char *key, int n){
     }
     return n;
 }
-char* findIndexAndAdd(int *messageToBeEncrypted, int size, char *key){
+char* findIndexAndAdd(char *messageToBeEncrypted, int size, char *key){
     const int MAX_BUFF = size*4;
     char *encryptedMessage = malloc(MAX_BUFF*sizeof(int));
     int length = 0;
@@ -119,29 +124,14 @@ char* findIndexAndAdd(int *messageToBeEncrypted, int size, char *key){
     return encryptedMessage;
 }
 char* encryptText(char *key, char *message){
-    FILE *f = fopen(message, "r");
-    struct stat st;
-    stat(message, &st);
-    int size = st.st_size;
 
-    char numberFromFile = '0';
-    int count = 1;
-    int *messageToBeEncrypted = malloc(size*sizeof(int));
-
-    while (fscanf(f, "%c", &numberFromFile) == 1)
-    {
-        messageToBeEncrypted[count] = numberFromFile;
-        printf("%c",messageToBeEncrypted[count]);
-        count++;
-    }
-    fclose(f);
-
+    char *messageToBeEncrypted = openFile(message);
     char *indexes = findIndexAndAdd(messageToBeEncrypted, size, key);
     return indexes;
 }
 
 char* encode(char *messageFile, char *keyFromFile){
-    int *keyFile = openFile(keyFromFile);
+    char *keyFile = openFile(keyFromFile);
     char *key = filterAndGetKey(keyFile);
     char *encrypted = encryptText(key, messageFile);
     return encrypted;

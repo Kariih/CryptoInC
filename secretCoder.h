@@ -5,9 +5,9 @@
 
 int size;
 
-int *openFile(char *filename);
-char* filterAndGetKey(int *keyFile);
+char *openFile(char *filename);
+char* filterAndGetKey(char *keyFile);
 int findN(int currentCharToEncrypt, char *key, int n);
-char* findIndexAndAdd(int *messageToBeEncrypted, int size, char *key);
+char* findIndexAndAdd(char *messageToBeEncrypted, int size, char *key);
 char* encryptText(char *key, char *message);
 char* encode(char *messageFile, char *keyFromFile);
