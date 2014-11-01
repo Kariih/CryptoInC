@@ -5,9 +5,8 @@
 #include "secretCoder.h"
 
 
-void decodeMessage(char *key, char *message)
+char* decode(char *key, char *message)
 {
-    int size = 0;
     while(message[size] != '\0'){
         size++;
     }
@@ -50,11 +49,11 @@ void decodeMessage(char *key, char *message)
     }
 
 
-    printf("\n");
+    printf("\nDecoded message: \n");
     for(int i = 0; i <= index; i++)
     {
         printf("%c",decryptedMessage[i]);
     }
 
-    //return decryptedMessage;
+    return decryptedMessage;
 }

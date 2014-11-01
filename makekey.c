@@ -18,7 +18,6 @@ char* filterAndGetKey(char *keyFile)
         if((lowercase[i]>='a'&&lowercase[i]<='z'))
         {
             removedAllButLetters[countLetters] = lowercase[i];
-            printf("%c", removedAllButLetters[countLetters]);
             countLetters++;
         }
     }

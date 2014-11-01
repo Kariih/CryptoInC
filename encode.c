@@ -81,6 +81,7 @@ char* findIndexAndAdd(char *messageToBeEncrypted, int size, char *key){
                                "%c", currentCharToEncrypt);
         }
     }
+    printf("\nEncrypted message: \n");
     printf("%s", encryptedMessage);
     return encryptedMessage;
 }

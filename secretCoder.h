@@ -5,7 +5,10 @@
 * The char pointer returned from openFile() is input paramerer to
 * key, message.
 */
+
+//int size (of messages, keys) is used all over the program.
 int size;
+
 /*
 * Open file, both keys and messages.
 * Char pointer returned is text readed from file.
