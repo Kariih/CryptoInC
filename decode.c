@@ -57,12 +57,5 @@ char* decode(char *key, char *message)
         }
     }
 
-    //print the decoded message
-    printf("\nDecoded message: \n");
-    for(int i = 0; i <= index; i++)
-    {
-        printf("%c",decryptedMessage[i]);
-    }
-
     return decryptedMessage;
 }

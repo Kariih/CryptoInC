@@ -43,3 +43,21 @@ int findN(int currentCharToEncrypt, char *key, int n);
 * Return a decoded text.
 */
 char* decode(char *key, char *message);
+
+/*
+* Print out status for encryption.
+* Parameter is name of sourcefile (sourceFileName),
+* name of key file (keyFileName) and the encoded message.
+* inputType can have following declaration:
+* sourceFile = s, keyFileName = k, encryptedMessage = m. ("skm")
+*/
+void myPrintEncoded(char *inputTypes, char *souceFileName, char *keyFileName, char *encryptedMessage);
+
+/*
+* Print out status for encryption.
+* Parameter is name of sourcefile (sourceFileName),
+* name of key file (keyFileName) and the decoded message.
+* inputType can have following declaration:
+* keyFileName = k, encryptedMessage = m. ("km")
+*/
+void myPrintDecoded(char *inputTypes, char *keyFileName, char *decryptedMessage);
