@@ -12,5 +12,5 @@ int main()
     char *keyFromFile2 = "songLibrary/sweetChildGR.txt";
     char *keyFile2 = openFile(keyFromFile2);
     char *key2 = filterAndGetKey(keyFile2);
-    char *txtMessage = decode(key2, encrypted);
+    decode(key2, encrypted);
 }
