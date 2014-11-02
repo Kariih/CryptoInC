@@ -1,5 +1,5 @@
 
-void myPrint(char *inputTypes)
+void myPrint(char *inputTypes, )
 {
-    
+
 }
